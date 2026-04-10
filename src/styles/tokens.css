@@ -1,0 +1,266 @@
+/* Theme tokens — Claude / Anthropic-inspired (getdesign `claude`). See DESIGN.md */
+:where(.app-root, body)[data-theme='light'],
+.app-root:not([data-theme]) {
+  --cl-parchment: #f5f4ed;
+  --cl-ivory: #faf9f5;
+  --cl-white: #ffffff;
+  --cl-warm-sand: #e8e6dc;
+  --cl-near-black: #141413;
+  --cl-terracotta: #c96442;
+  --cl-terracotta-hover: #b55a3a;
+  --cl-coral: #d97757;
+  --cl-charcoal-warm: #4d4c48;
+  --cl-olive-gray: #5e5d59;
+  --cl-stone-gray: #87867f;
+  --cl-dark-warm: #3d3d3a;
+  --cl-border-cream: #f0eee6;
+  --cl-border-warm: #e8e6dc;
+  --cl-dark-surface: #30302e;
+  --cl-ring-warm: #d1cfc5;
+  --cl-ring-deep: #c2c0b6;
+  --cl-warm-silver: #b0aea5;
+  --cl-focus-blue: #3898ec;
+  --cl-error: #b53333;
+
+  --accent: var(--cl-terracotta);
+  --accent-hover: var(--cl-terracotta-hover);
+  --text-on-accent: var(--cl-ivory);
+
+  --canvas-bg: var(--cl-parchment);
+  --page-bg: var(--cl-ivory);
+  --page-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px;
+  --page-border: 1px solid var(--cl-border-cream);
+  --page-max-width: 1200px;
+
+  --surface-elevated: var(--cl-white);
+  --sidebar-bg: var(--cl-ivory);
+
+  --text-primary: var(--cl-near-black);
+  --text-secondary: var(--cl-olive-gray);
+  --text-tertiary: var(--cl-stone-gray);
+
+  --link: var(--cl-dark-warm);
+  --link-hover: var(--cl-terracotta);
+
+  --inline-code-bg: #eceae3;
+  --inline-code-text: var(--cl-charcoal-warm);
+
+  --quote-bg: #f0eee8;
+  --quote-border: var(--cl-border-warm);
+
+  --divider: var(--cl-border-cream);
+
+  --table-header-bg: #f2f0e9;
+  --table-border: var(--cl-border-cream);
+  --table-row-hover: rgba(20, 20, 19, 0.05);
+
+  --code-block-bg: var(--cl-near-black);
+  --code-block-text: var(--cl-warm-silver);
+
+  --editor-bg: var(--cl-ivory);
+  --editor-border: var(--cl-border-cream);
+  --editor-focus-ring: var(--cl-focus-blue);
+
+  --chrome-bg: rgba(250, 249, 245, 0.94);
+  --chrome-border: var(--cl-border-cream);
+
+  --header-control-hover-bg: #e4e2d8;
+  --header-control-hover-border: var(--cl-ring-warm);
+  --header-control-hover-color: var(--cl-near-black);
+
+  --header-control-active-bg: #dddace;
+  --header-control-active-border: var(--cl-ring-deep);
+  --header-control-active-color: var(--cl-near-black);
+
+  --secondary-control-bg: var(--cl-warm-sand);
+  --secondary-control-ring: var(--cl-ring-warm);
+
+  --ring-btn-secondary: 0 0 0 1px var(--cl-ring-warm);
+  --ring-btn-primary: 0 0 0 1px var(--cl-terracotta);
+
+  --menu-danger-active-bg: rgba(181, 51, 51, 0.12);
+  --menu-danger: var(--cl-error);
+
+  --popover-shadow:
+    0 0 0 1px var(--cl-border-cream), rgba(0, 0, 0, 0.05) 0px 4px 24px;
+  --toc-shadow:
+    0 0 0 1px var(--cl-border-cream), rgba(0, 0, 0, 0.04) 0px 4px 20px;
+
+  --ui-ease: cubic-bezier(0.33, 0.09, 0.25, 1);
+  --ui-press-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+  --ui-release-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Anthropic Serif → Georgia; Sans → system UI + Arial; Mono for code */
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+
+  --gutter-bg: var(--cl-parchment);
+
+  /* 저장 완료 토스트 — DESIGN.md 테라코타/코랄 브랜드 색 */
+  --toast-backdrop-bg: rgba(32, 22, 18, 0.48);
+  --toast-surface-bg: linear-gradient(
+    145deg,
+    #b55a3a 0%,
+    var(--cl-terracotta) 48%,
+    var(--cl-coral) 100%
+  );
+  --toast-surface-text: var(--cl-ivory);
+  --toast-surface-border: rgba(250, 249, 245, 0.4);
+  --toast-surface-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 6px 20px rgba(201, 100, 66, 0.35),
+    0 20px 48px rgba(89, 48, 32, 0.35);
+}
+
+:where(.app-root, body)[data-theme='dark'] {
+  --cl-parchment: #141413;
+  --cl-ivory: #faf9f5;
+  --cl-white: #ffffff;
+  --cl-warm-sand: #3a3a37;
+  --cl-near-black: #141413;
+  --cl-terracotta: #c96442;
+  --cl-terracotta-hover: #d97757;
+  --cl-coral: #d97757;
+  --cl-charcoal-warm: #d5d3ca;
+  --cl-olive-gray: #c4c2b8;
+  --cl-stone-gray: #9e9c93;
+  --cl-dark-warm: #e8e6dc;
+  --cl-border-cream: #3d3d3a;
+  --cl-border-warm: #30302e;
+  --cl-dark-surface: #30302e;
+  --cl-ring-warm: #4a4a46;
+  --cl-ring-deep: #5c5c58;
+  --cl-warm-silver: #b0aea5;
+  --cl-focus-blue: #3898ec;
+  --cl-error: #e07070;
+
+  --accent: var(--cl-terracotta);
+  --accent-hover: var(--cl-terracotta-hover);
+  --text-on-accent: var(--cl-ivory);
+
+  --canvas-bg: var(--cl-near-black);
+  --page-bg: var(--cl-dark-surface);
+  --page-shadow: rgba(0, 0, 0, 0.35) 0px 4px 28px;
+  --page-border: 1px solid var(--cl-border-warm);
+  --page-max-width: 1200px;
+
+  --surface-elevated: #3a3a37;
+  --sidebar-bg: var(--cl-dark-surface);
+
+  --text-primary: var(--cl-ivory);
+  --text-secondary: var(--cl-warm-silver);
+  --text-tertiary: var(--cl-stone-gray);
+
+  --link: var(--cl-coral);
+  --link-hover: #e99b7a;
+
+  --inline-code-bg: rgba(250, 249, 245, 0.1);
+  --inline-code-text: var(--cl-charcoal-warm);
+
+  --quote-bg: rgba(250, 249, 245, 0.06);
+  --quote-border: var(--cl-border-warm);
+
+  --divider: var(--cl-border-warm);
+
+  --table-header-bg: #3a3a37;
+  --table-border: var(--cl-border-warm);
+  --table-row-hover: rgba(250, 249, 245, 0.06);
+
+  --code-block-bg: #0d0d0c;
+  --code-block-text: var(--cl-warm-silver);
+
+  --editor-bg: #262624;
+  --editor-border: var(--cl-border-warm);
+  --editor-focus-ring: var(--cl-focus-blue);
+
+  --chrome-bg: rgba(20, 20, 19, 0.94);
+  --chrome-border: var(--cl-border-warm);
+
+  --header-control-hover-bg: rgba(201, 100, 66, 0.2);
+  --header-control-hover-border: var(--cl-ring-warm);
+  --header-control-hover-color: var(--cl-ivory);
+
+  --header-control-active-bg: rgba(250, 249, 245, 0.1);
+  --header-control-active-border: var(--cl-ring-deep);
+  --header-control-active-color: var(--cl-ivory);
+
+  --secondary-control-bg: var(--cl-warm-sand);
+  --secondary-control-ring: var(--cl-ring-warm);
+
+  --ring-btn-secondary: 0 0 0 1px var(--cl-ring-warm);
+  --ring-btn-primary: 0 0 0 1px var(--cl-terracotta);
+
+  --menu-danger-active-bg: rgba(224, 112, 112, 0.18);
+  --menu-danger: var(--cl-error);
+
+  --popover-shadow:
+    0 0 0 1px var(--cl-border-warm), rgba(0, 0, 0, 0.4) 0px 8px 32px;
+  --toc-shadow:
+    0 0 0 1px var(--cl-border-warm), rgba(0, 0, 0, 0.25) 0px 4px 24px;
+
+  --ui-ease: cubic-bezier(0.33, 0.09, 0.25, 1);
+  --ui-press-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+  --ui-release-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+
+  --gutter-bg: var(--cl-near-black);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+
+  /* 저장 완료 토스트 — 다크 UI 위 코랄·테라코타 하이라이트 (DESIGN.md) */
+  --toast-backdrop-bg: rgba(12, 10, 9, 0.62);
+  --toast-surface-bg: linear-gradient(
+    145deg,
+    #a84a32 0%,
+    var(--cl-terracotta) 45%,
+    var(--cl-coral) 100%
+  );
+  --toast-surface-text: var(--cl-ivory);
+  --toast-surface-border: rgba(250, 249, 245, 0.35);
+  --toast-surface-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.22) inset,
+    0 8px 28px rgba(201, 100, 66, 0.55),
+    0 24px 56px rgba(0, 0, 0, 0.4);
+}

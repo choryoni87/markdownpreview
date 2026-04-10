@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>문서</title>
+<style>
+/* Theme tokens — Claude / Anthropic-inspired (getdesign `claude`). See DESIGN.md */
+:where(.app-root, body)[data-theme='light'],
+.app-root:not([data-theme]) {
+  --cl-parchment: #f5f4ed;
+  --cl-ivory: #faf9f5;
+  --cl-white: #ffffff;
+  --cl-warm-sand: #e8e6dc;
+  --cl-near-black: #141413;
+  --cl-terracotta: #c96442;
+  --cl-terracotta-hover: #b55a3a;
+  --cl-coral: #d97757;
+  --cl-charcoal-warm: #4d4c48;
+  --cl-olive-gray: #5e5d59;
+  --cl-stone-gray: #87867f;
+  --cl-dark-warm: #3d3d3a;
+  --cl-border-cream: #f0eee6;
+  --cl-border-warm: #e8e6dc;
+  --cl-dark-surface: #30302e;
+  --cl-ring-warm: #d1cfc5;
+  --cl-ring-deep: #c2c0b6;
+  --cl-warm-silver: #b0aea5;
+  --cl-focus-blue: #3898ec;
+  --cl-error: #b53333;
+
+  --accent: var(--cl-terracotta);
+  --accent-hover: var(--cl-terracotta-hover);
+  --text-on-accent: var(--cl-ivory);
+
+  --canvas-bg: var(--cl-parchment);
+  --page-bg: var(--cl-ivory);
+  --page-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px;
+  --page-border: 1px solid var(--cl-border-cream);
+  --page-max-width: 1200px;
+
+  --surface-elevated: var(--cl-white);
+  --sidebar-bg: var(--cl-ivory);
+
+  --text-primary: var(--cl-near-black);
+  --text-secondary: var(--cl-olive-gray);
+  --text-tertiary: var(--cl-stone-gray);
+
+  --link: var(--cl-dark-warm);
+  --link-hover: var(--cl-terracotta);
+
+  --inline-code-bg: #eceae3;
+  --inline-code-text: var(--cl-charcoal-warm);
+
+  --quote-bg: #f0eee8;
+  --quote-border: var(--cl-border-warm);
+
+  --divider: var(--cl-border-cream);
+
+  --table-header-bg: #f2f0e9;
+  --table-border: var(--cl-border-cream);
+  --table-row-hover: rgba(20, 20, 19, 0.05);
+
+  --code-block-bg: var(--cl-near-black);
+  --code-block-text: var(--cl-warm-silver);
+
+  --editor-bg: var(--cl-ivory);
+  --editor-border: var(--cl-border-cream);
+  --editor-focus-ring: var(--cl-focus-blue);
+
+  --chrome-bg: rgba(250, 249, 245, 0.94);
+  --chrome-border: var(--cl-border-cream);
+
+  --header-control-hover-bg: #e4e2d8;
+  --header-control-hover-border: var(--cl-ring-warm);
+  --header-control-hover-color: var(--cl-near-black);
+
+  --header-control-active-bg: #dddace;
+  --header-control-active-border: var(--cl-ring-deep);
+  --header-control-active-color: var(--cl-near-black);
+
+  --secondary-control-bg: var(--cl-warm-sand);
+  --secondary-control-ring: var(--cl-ring-warm);
+
+  --ring-btn-secondary: 0 0 0 1px var(--cl-ring-warm);
+  --ring-btn-primary: 0 0 0 1px var(--cl-terracotta);
+
+  --menu-danger-active-bg: rgba(181, 51, 51, 0.12);
+  --menu-danger: var(--cl-error);
+
+  --popover-shadow:
+    0 0 0 1px var(--cl-border-cream), rgba(0, 0, 0, 0.05) 0px 4px 24px;
+  --toc-shadow:
+    0 0 0 1px var(--cl-border-cream), rgba(0, 0, 0, 0.04) 0px 4px 20px;
+
+  --ui-ease: cubic-bezier(0.33, 0.09, 0.25, 1);
+  --ui-press-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+  --ui-release-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Anthropic Serif → Georgia; Sans → system UI + Arial; Mono for code */
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+
+  --gutter-bg: var(--cl-parchment);
+}
+
+:where(.app-root, body)[data-theme='dark'] {
+  --cl-parchment: #141413;
+  --cl-ivory: #faf9f5;
+  --cl-white: #ffffff;
+  --cl-warm-sand: #3a3a37;
+  --cl-near-black: #141413;
+  --cl-terracotta: #c96442;
+  --cl-terracotta-hover: #d97757;
+  --cl-coral: #d97757;
+  --cl-charcoal-warm: #d5d3ca;
+  --cl-olive-gray: #c4c2b8;
+  --cl-stone-gray: #9e9c93;
+  --cl-dark-warm: #e8e6dc;
+  --cl-border-cream: #3d3d3a;
+  --cl-border-warm: #30302e;
+  --cl-dark-surface: #30302e;
+  --cl-ring-warm: #4a4a46;
+  --cl-ring-deep: #5c5c58;
+  --cl-warm-silver: #b0aea5;
+  --cl-focus-blue: #3898ec;
+  --cl-error: #e07070;
+
+  --accent: var(--cl-terracotta);
+  --accent-hover: var(--cl-terracotta-hover);
+  --text-on-accent: var(--cl-ivory);
+
+  --canvas-bg: var(--cl-near-black);
+  --page-bg: var(--cl-dark-surface);
+  --page-shadow: rgba(0, 0, 0, 0.35) 0px 4px 28px;
+  --page-border: 1px solid var(--cl-border-warm);
+  --page-max-width: 1200px;
+
+  --surface-elevated: #3a3a37;
+  --sidebar-bg: var(--cl-dark-surface);
+
+  --text-primary: var(--cl-ivory);
+  --text-secondary: var(--cl-warm-silver);
+  --text-tertiary: var(--cl-stone-gray);
+
+  --link: var(--cl-coral);
+  --link-hover: #e99b7a;
+
+  --inline-code-bg: rgba(250, 249, 245, 0.1);
+  --inline-code-text: var(--cl-charcoal-warm);
+
+  --quote-bg: rgba(250, 249, 245, 0.06);
+  --quote-border: var(--cl-border-warm);
+
+  --divider: var(--cl-border-warm);
+
+  --table-header-bg: #3a3a37;
+  --table-border: var(--cl-border-warm);
+  --table-row-hover: rgba(250, 249, 245, 0.06);
+
+  --code-block-bg: #0d0d0c;
+  --code-block-text: var(--cl-warm-silver);
+
+  --editor-bg: #262624;
+  --editor-border: var(--cl-border-warm);
+  --editor-focus-ring: var(--cl-focus-blue);
+
+  --chrome-bg: rgba(20, 20, 19, 0.94);
+  --chrome-border: var(--cl-border-warm);
+
+  --header-control-hover-bg: rgba(201, 100, 66, 0.2);
+  --header-control-hover-border: var(--cl-ring-warm);
+  --header-control-hover-color: var(--cl-ivory);
+
+  --header-control-active-bg: rgba(250, 249, 245, 0.1);
+  --header-control-active-border: var(--cl-ring-deep);
+  --header-control-active-color: var(--cl-ivory);
+
+  --secondary-control-bg: var(--cl-warm-sand);
+  --secondary-control-ring: var(--cl-ring-warm);
+
+  --ring-btn-secondary: 0 0 0 1px var(--cl-ring-warm);
+  --ring-btn-primary: 0 0 0 1px var(--cl-terracotta);
+
+  --menu-danger-active-bg: rgba(224, 112, 112, 0.18);
+  --menu-danger: var(--cl-error);
+
+  --popover-shadow:
+    0 0 0 1px var(--cl-border-warm), rgba(0, 0, 0, 0.4) 0px 8px 32px;
+  --toc-shadow:
+    0 0 0 1px var(--cl-border-warm), rgba(0, 0, 0, 0.25) 0px 4px 24px;
+
+  --ui-ease: cubic-bezier(0.33, 0.09, 0.25, 1);
+  --ui-press-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+  --ui-release-transition:
+    background-color 0.2s var(--ui-ease),
+    border-color 0.2s var(--ui-ease),
+    color 0.2s var(--ui-ease),
+    opacity 0.2s var(--ui-ease),
+    box-shadow 0.2s var(--ui-ease),
+    filter 0.2s var(--ui-ease);
+
+  --gutter-bg: var(--cl-near-black);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --font-serif: Georgia, 'Times New Roman', Times, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+}
+
+/* Prose inside .notion-preview — Claude / Anthropic-inspired (DESIGN.md) */
+.notion-preview {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--text-primary);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.notion-preview > *:first-child {
+  margin-top: 0;
+}
+
+.notion-preview > *:last-child {
+  margin-bottom: 0;
+}
+
+.notion-preview h1,
+.notion-preview h2,
+.notion-preview h3,
+.notion-preview h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: normal;
+}
+
+.notion-preview h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: var(--space-6) 0 var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--divider);
+}
+
+.notion-preview h2 {
+  font-size: 1.375rem;
+  line-height: 1.22;
+  margin: var(--space-7) 0 var(--space-3);
+}
+
+.notion-preview h3 {
+  font-size: 1.1875rem;
+  line-height: 1.25;
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+.notion-preview h4 {
+  font-size: 1.0625rem;
+  line-height: 1.28;
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.notion-preview p {
+  margin: 0 0 var(--space-3);
+}
+
+.notion-preview a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.2s var(--ui-ease, cubic-bezier(0.25, 0.1, 0.25, 1));
+}
+
+.notion-preview a:hover {
+  color: var(--link-hover);
+}
+
+.notion-preview strong {
+  font-weight: 500;
+}
+
+.notion-preview del {
+  color: var(--text-secondary);
+}
+
+.notion-preview ul,
+.notion-preview ol {
+  margin: 0 0 var(--space-3);
+  padding-left: 1.5em;
+}
+
+.notion-preview li {
+  margin: var(--space-1) 0;
+}
+
+.notion-preview li > ul,
+.notion-preview li > ol {
+  margin-bottom: 0;
+}
+
+.notion-preview li:has(> input[type='checkbox']) {
+  list-style: none;
+  margin-left: -1.5em;
+  padding-left: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.notion-preview li input[type='checkbox'] {
+  margin: 0.35em 0 0;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: default;
+  pointer-events: none;
+}
+
+.notion-preview blockquote {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--quote-border);
+  background: var(--quote-bg);
+  border-radius: 0 12px 12px 0;
+  color: var(--text-primary);
+}
+
+.notion-preview blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.notion-preview hr {
+  margin: var(--space-5) 0;
+  border: none;
+  border-top: 1px solid var(--divider);
+}
+
+.notion-preview :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.94em;
+  letter-spacing: -0.02em;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: var(--inline-code-bg);
+  color: var(--inline-code-text);
+}
+
+.notion-preview pre {
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  border-radius: 12px;
+  background: var(--code-block-bg);
+  color: var(--code-block-text);
+  overflow: auto;
+  line-height: 1.55;
+  font-size: 0.9375rem;
+}
+
+.notion-preview pre code {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.notion-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-4) 0;
+  font-size: 1rem;
+  display: block;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--table-border);
+}
+
+.notion-preview thead {
+  background: var(--table-header-bg);
+}
+
+.notion-preview th,
+.notion-preview td {
+  border: 1px solid var(--table-border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.notion-preview tbody tr:hover {
+  background: var(--table-row-hover);
+}
+
+.notion-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.notion-preview .katex-display {
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.notion-preview .katex {
+  font-size: 1.05em;
+}
+
+.notion-preview .mermaid-chart {
+  margin: var(--space-4) 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.notion-preview .mermaid-error {
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-align: left;
+  white-space: pre-wrap;
+  color: var(--inline-code-text);
+  background: var(--inline-code-bg);
+  border-radius: 12px;
+}
+
+.notion-preview .mermaid-error-banner {
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid var(--editor-border);
+  border-left: 3px solid var(--menu-danger);
+  background: var(--menu-danger-active-bg);
+}
+
+.notion-preview .mermaid-error-title {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--menu-danger);
+}
+
+.notion-preview .mermaid-error-hint {
+  margin: 0 0 var(--space-3);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.notion-preview .mermaid-error-hint code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 1px 4px;
+  border-radius: 5px;
+  background: var(--inline-code-bg);
+  color: var(--inline-code-text);
+}
+
+.notion-preview .mermaid-error-source {
+  margin: 0;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: var(--text-primary);
+  background: var(--page-bg);
+  border-radius: 12px;
+  border: 1px solid var(--editor-border);
+}
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/*!
+  Theme: GitHub Dark
+  Description: Dark theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/
+.hljs {
+  color: #c9d1d9;
+  background: #0d1117
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #ff7b72
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #d2a8ff
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #79c0ff
+}
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #a5d6ff
+}
+.hljs-built_in,
+.hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #ffa657
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #8b949e
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #7ee787
+}
+.hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #c9d1d9
+}
+.hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #1f6feb;
+  font-weight: bold
+}
+.hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #f2cc60
+}
+.hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #c9d1d9;
+  font-style: italic
+}
+.hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #c9d1d9;
+  font-weight: bold
+}
+.hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #aff5b4;
+  background-color: #033a16
+}
+.hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #ffdcd7;
+  background-color: #67060c
+}
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+  /* purposely ignored */
+  
+}
+@font-face{font-display:block;font-family:KaTeX_AMS;font-style:normal;font-weight:400;src:url(fonts/KaTeX_AMS-Regular.woff2) format("woff2"),url(fonts/KaTeX_AMS-Regular.woff) format("woff"),url(fonts/KaTeX_AMS-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Caligraphic;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Caligraphic-Bold.woff2) format("woff2"),url(fonts/KaTeX_Caligraphic-Bold.woff) format("woff"),url(fonts/KaTeX_Caligraphic-Bold.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Caligraphic;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Caligraphic-Regular.woff2) format("woff2"),url(fonts/KaTeX_Caligraphic-Regular.woff) format("woff"),url(fonts/KaTeX_Caligraphic-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Fraktur;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Fraktur-Bold.woff2) format("woff2"),url(fonts/KaTeX_Fraktur-Bold.woff) format("woff"),url(fonts/KaTeX_Fraktur-Bold.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Fraktur;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Fraktur-Regular.woff2) format("woff2"),url(fonts/KaTeX_Fraktur-Regular.woff) format("woff"),url(fonts/KaTeX_Fraktur-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:normal;font-weight:700;src:url(fonts/KaTeX_Main-Bold.woff2) format("woff2"),url(fonts/KaTeX_Main-Bold.woff) format("woff"),url(fonts/KaTeX_Main-Bold.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:italic;font-weight:700;src:url(fonts/KaTeX_Main-BoldItalic.woff2) format("woff2"),url(fonts/KaTeX_Main-BoldItalic.woff) format("woff"),url(fonts/KaTeX_Main-BoldItalic.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:italic;font-weight:400;src:url(fonts/KaTeX_Main-Italic.woff2) format("woff2"),url(fonts/KaTeX_Main-Italic.woff) format("woff"),url(fonts/KaTeX_Main-Italic.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Main;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Main-Regular.woff2) format("woff2"),url(fonts/KaTeX_Main-Regular.woff) format("woff"),url(fonts/KaTeX_Main-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Math;font-style:italic;font-weight:700;src:url(fonts/KaTeX_Math-BoldItalic.woff2) format("woff2"),url(fonts/KaTeX_Math-BoldItalic.woff) format("woff"),url(fonts/KaTeX_Math-BoldItalic.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Math;font-style:italic;font-weight:400;src:url(fonts/KaTeX_Math-Italic.woff2) format("woff2"),url(fonts/KaTeX_Math-Italic.woff) format("woff"),url(fonts/KaTeX_Math-Italic.ttf) format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:normal;font-weight:700;src:url(fonts/KaTeX_SansSerif-Bold.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Bold.woff) format("woff"),url(fonts/KaTeX_SansSerif-Bold.ttf) format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:italic;font-weight:400;src:url(fonts/KaTeX_SansSerif-Italic.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Italic.woff) format("woff"),url(fonts/KaTeX_SansSerif-Italic.ttf) format("truetype")}@font-face{font-display:block;font-family:"KaTeX_SansSerif";font-style:normal;font-weight:400;src:url(fonts/KaTeX_SansSerif-Regular.woff2) format("woff2"),url(fonts/KaTeX_SansSerif-Regular.woff) format("woff"),url(fonts/KaTeX_SansSerif-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Script;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Script-Regular.woff2) format("woff2"),url(fonts/KaTeX_Script-Regular.woff) format("woff"),url(fonts/KaTeX_Script-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size1;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size1-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size1-Regular.woff) format("woff"),url(fonts/KaTeX_Size1-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size2;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size2-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size2-Regular.woff) format("woff"),url(fonts/KaTeX_Size2-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size3;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size3-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size3-Regular.woff) format("woff"),url(fonts/KaTeX_Size3-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Size4;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Size4-Regular.woff2) format("woff2"),url(fonts/KaTeX_Size4-Regular.woff) format("woff"),url(fonts/KaTeX_Size4-Regular.ttf) format("truetype")}@font-face{font-display:block;font-family:KaTeX_Typewriter;font-style:normal;font-weight:400;src:url(fonts/KaTeX_Typewriter-Regular.woff2) format("woff2"),url(fonts/KaTeX_Typewriter-Regular.woff) format("woff"),url(fonts/KaTeX_Typewriter-Regular.ttf) format("truetype")}.katex{font:normal 1.21em KaTeX_Main,Times New Roman,serif;line-height:1.2;position:relative;text-indent:0;text-rendering:auto}.katex *{-ms-high-contrast-adjust:none!important;border-color:currentColor}.katex .katex-version:after{content:"0.16.45"}.katex .katex-mathml{clip:rect(1px,1px,1px,1px);border:0;height:1px;overflow:hidden;padding:0;position:absolute;width:1px}.katex .katex-html>.newline{display:block}.katex .base{position:relative;white-space:nowrap;width:-webkit-min-content;width:-moz-min-content;width:min-content}.katex .base,.katex .strut{display:inline-block}.katex .textbf{font-weight:700}.katex .textit{font-style:italic}.katex .textrm{font-family:KaTeX_Main}.katex .textsf{font-family:KaTeX_SansSerif}.katex .texttt{font-family:KaTeX_Typewriter}.katex .mathnormal{font-family:KaTeX_Math;font-style:italic}.katex .mathit{font-family:KaTeX_Main;font-style:italic}.katex .mathrm{font-style:normal}.katex .mathbf{font-family:KaTeX_Main;font-weight:700}.katex .boldsymbol{font-family:KaTeX_Math;font-style:italic;font-weight:700}.katex .amsrm,.katex .mathbb,.katex .textbb{font-family:KaTeX_AMS}.katex .mathcal{font-family:KaTeX_Caligraphic}.katex .mathfrak,.katex .textfrak{font-family:KaTeX_Fraktur}.katex .mathboldfrak,.katex .textboldfrak{font-family:KaTeX_Fraktur;font-weight:700}.katex .mathtt{font-family:KaTeX_Typewriter}.katex .mathscr,.katex .textscr{font-family:KaTeX_Script}.katex .mathsf,.katex .textsf{font-family:KaTeX_SansSerif}.katex .mathboldsf,.katex .textboldsf{font-family:KaTeX_SansSerif;font-weight:700}.katex .mathitsf,.katex .mathsfit,.katex .textitsf{font-family:KaTeX_SansSerif;font-style:italic}.katex .mainrm{font-family:KaTeX_Main;font-style:normal}.katex .vlist-t{border-collapse:collapse;display:inline-table;table-layout:fixed}.katex .vlist-r{display:table-row}.katex .vlist{display:table-cell;position:relative;vertical-align:bottom}.katex .vlist>span{display:block;height:0;position:relative}.katex .vlist>span>span{display:inline-block}.katex .vlist>span>.pstrut{overflow:hidden;width:0}.katex .vlist-t2{margin-right:-2px}.katex .vlist-s{display:table-cell;font-size:1px;min-width:2px;vertical-align:bottom;width:2px}.katex .vbox{align-items:baseline;display:inline-flex;flex-direction:column}.katex .hbox{width:100%}.katex .hbox,.katex .thinbox{display:inline-flex;flex-direction:row}.katex .thinbox{max-width:0;width:0}.katex .msupsub{text-align:left}.katex .mfrac>span>span{text-align:center}.katex .mfrac .frac-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline,.katex .hline,.katex .mfrac .frac-line,.katex .overline .overline-line,.katex .rule,.katex .underline .underline-line{min-height:1px}.katex .mspace{display:inline-block}.katex .smash{display:inline;line-height:0}.katex .clap,.katex .llap,.katex .rlap{position:relative;width:0}.katex .clap>.inner,.katex .llap>.inner,.katex .rlap>.inner{position:absolute}.katex .clap>.fix,.katex .llap>.fix,.katex .rlap>.fix{display:inline-block}.katex .llap>.inner{right:0}.katex .clap>.inner,.katex .rlap>.inner{left:0}.katex .clap>.inner>span{margin-left:-50%;margin-right:50%}.katex .rule{border:0 solid;display:inline-block;position:relative}.katex .hline,.katex .overline .overline-line,.katex .underline .underline-line{border-bottom-style:solid;display:inline-block;width:100%}.katex .hdashline{border-bottom-style:dashed;display:inline-block;width:100%}.katex .sqrt>.root{margin-left:.2777777778em;margin-right:-.5555555556em}.katex .fontsize-ensurer.reset-size1.size1,.katex .sizing.reset-size1.size1{font-size:1em}.katex .fontsize-ensurer.reset-size1.size2,.katex .sizing.reset-size1.size2{font-size:1.2em}.katex .fontsize-ensurer.reset-size1.size3,.katex .sizing.reset-size1.size3{font-size:1.4em}.katex .fontsize-ensurer.reset-size1.size4,.katex .sizing.reset-size1.size4{font-size:1.6em}.katex .fontsize-ensurer.reset-size1.size5,.katex .sizing.reset-size1.size5{font-size:1.8em}.katex .fontsize-ensurer.reset-size1.size6,.katex .sizing.reset-size1.size6{font-size:2em}.katex .fontsize-ensurer.reset-size1.size7,.katex .sizing.reset-size1.size7{font-size:2.4em}.katex .fontsize-ensurer.reset-size1.size8,.katex .sizing.reset-size1.size8{font-size:2.88em}.katex .fontsize-ensurer.reset-size1.size9,.katex .sizing.reset-size1.size9{font-size:3.456em}.katex .fontsize-ensurer.reset-size1.size10,.katex .sizing.reset-size1.size10{font-size:4.148em}.katex .fontsize-ensurer.reset-size1.size11,.katex .sizing.reset-size1.size11{font-size:4.976em}.katex .fontsize-ensurer.reset-size2.size1,.katex .sizing.reset-size2.size1{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size2.size2,.katex .sizing.reset-size2.size2{font-size:1em}.katex .fontsize-ensurer.reset-size2.size3,.katex .sizing.reset-size2.size3{font-size:1.1666666667em}.katex .fontsize-ensurer.reset-size2.size4,.katex .sizing.reset-size2.size4{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size2.size5,.katex .sizing.reset-size2.size5{font-size:1.5em}.katex .fontsize-ensurer.reset-size2.size6,.katex .sizing.reset-size2.size6{font-size:1.6666666667em}.katex .fontsize-ensurer.reset-size2.size7,.katex .sizing.reset-size2.size7{font-size:2em}.katex .fontsize-ensurer.reset-size2.size8,.katex .sizing.reset-size2.size8{font-size:2.4em}.katex .fontsize-ensurer.reset-size2.size9,.katex .sizing.reset-size2.size9{font-size:2.88em}.katex .fontsize-ensurer.reset-size2.size10,.katex .sizing.reset-size2.size10{font-size:3.4566666667em}.katex .fontsize-ensurer.reset-size2.size11,.katex .sizing.reset-size2.size11{font-size:4.1466666667em}.katex .fontsize-ensurer.reset-size3.size1,.katex .sizing.reset-size3.size1{font-size:.7142857143em}.katex .fontsize-ensurer.reset-size3.size2,.katex .sizing.reset-size3.size2{font-size:.8571428571em}.katex .fontsize-ensurer.reset-size3.size3,.katex .sizing.reset-size3.size3{font-size:1em}.katex .fontsize-ensurer.reset-size3.size4,.katex .sizing.reset-size3.size4{font-size:1.1428571429em}.katex .fontsize-ensurer.reset-size3.size5,.katex .sizing.reset-size3.size5{font-size:1.2857142857em}.katex .fontsize-ensurer.reset-size3.size6,.katex .sizing.reset-size3.size6{font-size:1.4285714286em}.katex .fontsize-ensurer.reset-size3.size7,.katex .sizing.reset-size3.size7{font-size:1.7142857143em}.katex .fontsize-ensurer.reset-size3.size8,.katex .sizing.reset-size3.size8{font-size:2.0571428571em}.katex .fontsize-ensurer.reset-size3.size9,.katex .sizing.reset-size3.size9{font-size:2.4685714286em}.katex .fontsize-ensurer.reset-size3.size10,.katex .sizing.reset-size3.size10{font-size:2.9628571429em}.katex .fontsize-ensurer.reset-size3.size11,.katex .sizing.reset-size3.size11{font-size:3.5542857143em}.katex .fontsize-ensurer.reset-size4.size1,.katex .sizing.reset-size4.size1{font-size:.625em}.katex .fontsize-ensurer.reset-size4.size2,.katex .sizing.reset-size4.size2{font-size:.75em}.katex .fontsize-ensurer.reset-size4.size3,.katex .sizing.reset-size4.size3{font-size:.875em}.katex .fontsize-ensurer.reset-size4.size4,.katex .sizing.reset-size4.size4{font-size:1em}.katex .fontsize-ensurer.reset-size4.size5,.katex .sizing.reset-size4.size5{font-size:1.125em}.katex .fontsize-ensurer.reset-size4.size6,.katex .sizing.reset-size4.size6{font-size:1.25em}.katex .fontsize-ensurer.reset-size4.size7,.katex .sizing.reset-size4.size7{font-size:1.5em}.katex .fontsize-ensurer.reset-size4.size8,.katex .sizing.reset-size4.size8{font-size:1.8em}.katex .fontsize-ensurer.reset-size4.size9,.katex .sizing.reset-size4.size9{font-size:2.16em}.katex .fontsize-ensurer.reset-size4.size10,.katex .sizing.reset-size4.size10{font-size:2.5925em}.katex .fontsize-ensurer.reset-size4.size11,.katex .sizing.reset-size4.size11{font-size:3.11em}.katex .fontsize-ensurer.reset-size5.size1,.katex .sizing.reset-size5.size1{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size5.size2,.katex .sizing.reset-size5.size2{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size5.size3,.katex .sizing.reset-size5.size3{font-size:.7777777778em}.katex .fontsize-ensurer.reset-size5.size4,.katex .sizing.reset-size5.size4{font-size:.8888888889em}.katex .fontsize-ensurer.reset-size5.size5,.katex .sizing.reset-size5.size5{font-size:1em}.katex .fontsize-ensurer.reset-size5.size6,.katex .sizing.reset-size5.size6{font-size:1.1111111111em}.katex .fontsize-ensurer.reset-size5.size7,.katex .sizing.reset-size5.size7{font-size:1.3333333333em}.katex .fontsize-ensurer.reset-size5.size8,.katex .sizing.reset-size5.size8{font-size:1.6em}.katex .fontsize-ensurer.reset-size5.size9,.katex .sizing.reset-size5.size9{font-size:1.92em}.katex .fontsize-ensurer.reset-size5.size10,.katex .sizing.reset-size5.size10{font-size:2.3044444444em}.katex .fontsize-ensurer.reset-size5.size11,.katex .sizing.reset-size5.size11{font-size:2.7644444444em}.katex .fontsize-ensurer.reset-size6.size1,.katex .sizing.reset-size6.size1{font-size:.5em}.katex .fontsize-ensurer.reset-size6.size2,.katex .sizing.reset-size6.size2{font-size:.6em}.katex .fontsize-ensurer.reset-size6.size3,.katex .sizing.reset-size6.size3{font-size:.7em}.katex .fontsize-ensurer.reset-size6.size4,.katex .sizing.reset-size6.size4{font-size:.8em}.katex .fontsize-ensurer.reset-size6.size5,.katex .sizing.reset-size6.size5{font-size:.9em}.katex .fontsize-ensurer.reset-size6.size6,.katex .sizing.reset-size6.size6{font-size:1em}.katex .fontsize-ensurer.reset-size6.size7,.katex .sizing.reset-size6.size7{font-size:1.2em}.katex .fontsize-ensurer.reset-size6.size8,.katex .sizing.reset-size6.size8{font-size:1.44em}.katex .fontsize-ensurer.reset-size6.size9,.katex .sizing.reset-size6.size9{font-size:1.728em}.katex .fontsize-ensurer.reset-size6.size10,.katex .sizing.reset-size6.size10{font-size:2.074em}.katex .fontsize-ensurer.reset-size6.size11,.katex .sizing.reset-size6.size11{font-size:2.488em}.katex .fontsize-ensurer.reset-size7.size1,.katex .sizing.reset-size7.size1{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size7.size2,.katex .sizing.reset-size7.size2{font-size:.5em}.katex .fontsize-ensurer.reset-size7.size3,.katex .sizing.reset-size7.size3{font-size:.5833333333em}.katex .fontsize-ensurer.reset-size7.size4,.katex .sizing.reset-size7.size4{font-size:.6666666667em}.katex .fontsize-ensurer.reset-size7.size5,.katex .sizing.reset-size7.size5{font-size:.75em}.katex .fontsize-ensurer.reset-size7.size6,.katex .sizing.reset-size7.size6{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size7.size7,.katex .sizing.reset-size7.size7{font-size:1em}.katex .fontsize-ensurer.reset-size7.size8,.katex .sizing.reset-size7.size8{font-size:1.2em}.katex .fontsize-ensurer.reset-size7.size9,.katex .sizing.reset-size7.size9{font-size:1.44em}.katex .fontsize-ensurer.reset-size7.size10,.katex .sizing.reset-size7.size10{font-size:1.7283333333em}.katex .fontsize-ensurer.reset-size7.size11,.katex .sizing.reset-size7.size11{font-size:2.0733333333em}.katex .fontsize-ensurer.reset-size8.size1,.katex .sizing.reset-size8.size1{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size8.size2,.katex .sizing.reset-size8.size2{font-size:.4166666667em}.katex .fontsize-ensurer.reset-size8.size3,.katex .sizing.reset-size8.size3{font-size:.4861111111em}.katex .fontsize-ensurer.reset-size8.size4,.katex .sizing.reset-size8.size4{font-size:.5555555556em}.katex .fontsize-ensurer.reset-size8.size5,.katex .sizing.reset-size8.size5{font-size:.625em}.katex .fontsize-ensurer.reset-size8.size6,.katex .sizing.reset-size8.size6{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size8.size7,.katex .sizing.reset-size8.size7{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size8.size8,.katex .sizing.reset-size8.size8{font-size:1em}.katex .fontsize-ensurer.reset-size8.size9,.katex .sizing.reset-size8.size9{font-size:1.2em}.katex .fontsize-ensurer.reset-size8.size10,.katex .sizing.reset-size8.size10{font-size:1.4402777778em}.katex .fontsize-ensurer.reset-size8.size11,.katex .sizing.reset-size8.size11{font-size:1.7277777778em}.katex .fontsize-ensurer.reset-size9.size1,.katex .sizing.reset-size9.size1{font-size:.2893518519em}.katex .fontsize-ensurer.reset-size9.size2,.katex .sizing.reset-size9.size2{font-size:.3472222222em}.katex .fontsize-ensurer.reset-size9.size3,.katex .sizing.reset-size9.size3{font-size:.4050925926em}.katex .fontsize-ensurer.reset-size9.size4,.katex .sizing.reset-size9.size4{font-size:.462962963em}.katex .fontsize-ensurer.reset-size9.size5,.katex .sizing.reset-size9.size5{font-size:.5208333333em}.katex .fontsize-ensurer.reset-size9.size6,.katex .sizing.reset-size9.size6{font-size:.5787037037em}.katex .fontsize-ensurer.reset-size9.size7,.katex .sizing.reset-size9.size7{font-size:.6944444444em}.katex .fontsize-ensurer.reset-size9.size8,.katex .sizing.reset-size9.size8{font-size:.8333333333em}.katex .fontsize-ensurer.reset-size9.size9,.katex .sizing.reset-size9.size9{font-size:1em}.katex .fontsize-ensurer.reset-size9.size10,.katex .sizing.reset-size9.size10{font-size:1.2002314815em}.katex .fontsize-ensurer.reset-size9.size11,.katex .sizing.reset-size9.size11{font-size:1.4398148148em}.katex .fontsize-ensurer.reset-size10.size1,.katex .sizing.reset-size10.size1{font-size:.2410800386em}.katex .fontsize-ensurer.reset-size10.size2,.katex .sizing.reset-size10.size2{font-size:.2892960463em}.katex .fontsize-ensurer.reset-size10.size3,.katex .sizing.reset-size10.size3{font-size:.337512054em}.katex .fontsize-ensurer.reset-size10.size4,.katex .sizing.reset-size10.size4{font-size:.3857280617em}.katex .fontsize-ensurer.reset-size10.size5,.katex .sizing.reset-size10.size5{font-size:.4339440694em}.katex .fontsize-ensurer.reset-size10.size6,.katex .sizing.reset-size10.size6{font-size:.4821600771em}.katex .fontsize-ensurer.reset-size10.size7,.katex .sizing.reset-size10.size7{font-size:.5785920926em}.katex .fontsize-ensurer.reset-size10.size8,.katex .sizing.reset-size10.size8{font-size:.6943105111em}.katex .fontsize-ensurer.reset-size10.size9,.katex .sizing.reset-size10.size9{font-size:.8331726133em}.katex .fontsize-ensurer.reset-size10.size10,.katex .sizing.reset-size10.size10{font-size:1em}.katex .fontsize-ensurer.reset-size10.size11,.katex .sizing.reset-size10.size11{font-size:1.1996142719em}.katex .fontsize-ensurer.reset-size11.size1,.katex .sizing.reset-size11.size1{font-size:.2009646302em}.katex .fontsize-ensurer.reset-size11.size2,.katex .sizing.reset-size11.size2{font-size:.2411575563em}.katex .fontsize-ensurer.reset-size11.size3,.katex .sizing.reset-size11.size3{font-size:.2813504823em}.katex .fontsize-ensurer.reset-size11.size4,.katex .sizing.reset-size11.size4{font-size:.3215434084em}.katex .fontsize-ensurer.reset-size11.size5,.katex .sizing.reset-size11.size5{font-size:.3617363344em}.katex .fontsize-ensurer.reset-size11.size6,.katex .sizing.reset-size11.size6{font-size:.4019292605em}.katex .fontsize-ensurer.reset-size11.size7,.katex .sizing.reset-size11.size7{font-size:.4823151125em}.katex .fontsize-ensurer.reset-size11.size8,.katex .sizing.reset-size11.size8{font-size:.578778135em}.katex .fontsize-ensurer.reset-size11.size9,.katex .sizing.reset-size11.size9{font-size:.6945337621em}.katex .fontsize-ensurer.reset-size11.size10,.katex .sizing.reset-size11.size10{font-size:.8336012862em}.katex .fontsize-ensurer.reset-size11.size11,.katex .sizing.reset-size11.size11{font-size:1em}.katex .delimsizing.size1{font-family:KaTeX_Size1}.katex .delimsizing.size2{font-family:KaTeX_Size2}.katex .delimsizing.size3{font-family:KaTeX_Size3}.katex .delimsizing.size4{font-family:KaTeX_Size4}.katex .delimsizing.mult .delim-size1>span{font-family:KaTeX_Size1}.katex .delimsizing.mult .delim-size4>span{font-family:KaTeX_Size4}.katex .nulldelimiter{display:inline-block;width:.12em}.katex .delimcenter,.katex .op-symbol{position:relative}.katex .op-symbol.small-op{font-family:KaTeX_Size1}.katex .op-symbol.large-op{font-family:KaTeX_Size2}.katex .accent>.vlist-t,.katex .op-limits>.vlist-t{text-align:center}.katex .accent .accent-body{position:relative}.katex .accent .accent-body:not(.accent-full){width:0}.katex .overlay{display:block}.katex .mtable .vertical-separator{display:inline-block;min-width:1px}.katex .mtable .arraycolsep{display:inline-block}.katex .mtable .col-align-c>.vlist-t{text-align:center}.katex .mtable .col-align-l>.vlist-t{text-align:left}.katex .mtable .col-align-r>.vlist-t{text-align:right}.katex .svg-align{text-align:left}.katex svg{fill:currentColor;stroke:currentColor;display:block;height:inherit;position:absolute;width:100%}.katex svg path{stroke:none}.katex svg{fill-rule:nonzero;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1}.katex img{border-style:none;max-height:none;max-width:none;min-height:0;min-width:0}.katex .stretchy{display:block;overflow:hidden;position:relative;width:100%}.katex .stretchy:after,.katex .stretchy:before{content:""}.katex .hide-tail{overflow:hidden;position:relative;width:100%}.katex .halfarrow-left{left:0;overflow:hidden;position:absolute;width:50.2%}.katex .halfarrow-right{overflow:hidden;position:absolute;right:0;width:50.2%}.katex .brace-left{left:0;overflow:hidden;position:absolute;width:25.1%}.katex .brace-center{left:25%;overflow:hidden;position:absolute;width:50%}.katex .brace-right{overflow:hidden;position:absolute;right:0;width:25.1%}.katex .x-arrow-pad{padding:0 .5em}.katex .cd-arrow-pad{padding:0 .55556em 0 .27778em}.katex .mover,.katex .munder,.katex .x-arrow{text-align:center}.katex .boxpad{padding:0 .3em}.katex .fbox,.katex .fcolorbox{border:.04em solid;box-sizing:border-box}.katex .cancel-pad{padding:0 .2em}.katex .cancel-lap{margin-left:-.2em;margin-right:-.2em}.katex .sout{border-bottom-style:solid;border-bottom-width:.08em}.katex .angl{border-right:.049em solid;border-top:.049em solid;box-sizing:border-box;margin-right:.03889em}.katex .anglpad{padding:0 .03889em}.katex .eqn-num:before{content:"(" counter(katexEqnNo) ")";counter-increment:katexEqnNo}.katex .mml-eqn-num:before{content:"(" counter(mmlEqnNo) ")";counter-increment:mmlEqnNo}.katex .mtr-glue{width:50%}.katex .cd-vert-arrow{display:inline-block;position:relative}.katex .cd-label-left{display:inline-block;position:absolute;right:calc(50% + .3em);text-align:left}.katex .cd-label-right{display:inline-block;left:calc(50% + .3em);position:absolute;text-align:right}.katex-display{display:block;margin:1em 0;text-align:center}.katex-display>.katex{display:block;text-align:center;white-space:nowrap}.katex-display>.katex>.katex-html{display:block;position:relative}.katex-display>.katex>.katex-html>.tag{position:absolute;right:0}.katex-display.leqno>.katex>.katex-html>.tag{left:0;right:auto}.katex-display.fleqn>.katex{padding-left:2em;text-align:left}body{counter-reset:katexEqnNo mmlEqnNo}
+
+
+body{margin:0;font-family:var(--font-sans);background:var(--canvas-bg);color:var(--text-primary);}
+.export-shell{min-height:100vh;padding:32px 20px;box-sizing:border-box;}
+.export-page{max-width:var(--page-max-width);margin:0 auto;background:var(--page-bg);border:var(--page-border);border-radius:16px;padding:var(--space-6) var(--space-6) var(--space-7);box-shadow:var(--page-shadow);}
+
+</style>
+</head>
+<body data-theme="light">
+<div class="export-shell">
+  <article class="export-page notion-preview"><h1 id="마크다운-프리뷰">마크다운 프리뷰</h1>
+<p><strong>Phase 3</strong> — 수식(KaTeX)·다이어그램(Mermaid)·적응형 미리보기·PWA(오프라인 캐시)까지 포함했습니다.</p>
+<h2 id="수식-katex">수식 (KaTeX)</h2>
+<p>인라인은 <code>&lt;span class="katex-inline-ph" data-katex-inline="0"&gt;&lt;/span&gt;</code> 블록으로 쓸 수 있습니다. 예: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><mi>x</mi><mtext> </mtext><mi>d</mi><mi>x</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\int_0^1 x\,dx = \frac{1}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+<p>디스플레이 수식은 `</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">...</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.1056em;"></span><span class="mord">...</span></span></span></span></span>
+<p>` 또는 <code>katex 펜스</code>:</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>i</mi><mo>=</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\sum_{i=1}^{n} i = \frac{n(n+1)}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.9291em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<h2 id="다이어그램-mermaid">다이어그램 (Mermaid)</h2>
+<div class="mermaid-chart" data-mermaid="flowchart%20LR%0A%20%20A%5B%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%5D%20--%3E%20B%5B%EB%AF%B8%EB%A6%AC%EB%B3%B4%EA%B8%B0%5D%0A%20%20B%20--%3E%20C%5BHTML%20%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0%5D"><svg id="mmd-1775822726584-0-60yiflr" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 506.515625px;" viewBox="0 0 506.515625 70" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mmd-1775822726584-0-60yiflr{font-family:inherit;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mmd-1775822726584-0-60yiflr .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mmd-1775822726584-0-60yiflr .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mmd-1775822726584-0-60yiflr .error-icon{fill:#552222;}#mmd-1775822726584-0-60yiflr .error-text{fill:#552222;stroke:#552222;}#mmd-1775822726584-0-60yiflr .edge-thickness-normal{stroke-width:1px;}#mmd-1775822726584-0-60yiflr .edge-thickness-thick{stroke-width:3.5px;}#mmd-1775822726584-0-60yiflr .edge-pattern-solid{stroke-dasharray:0;}#mmd-1775822726584-0-60yiflr .edge-thickness-invisible{stroke-width:0;fill:none;}#mmd-1775822726584-0-60yiflr .edge-pattern-dashed{stroke-dasharray:3;}#mmd-1775822726584-0-60yiflr .edge-pattern-dotted{stroke-dasharray:2;}#mmd-1775822726584-0-60yiflr .marker{fill:#333333;stroke:#333333;}#mmd-1775822726584-0-60yiflr .marker.cross{stroke:#333333;}#mmd-1775822726584-0-60yiflr svg{font-family:inherit;font-size:16px;}#mmd-1775822726584-0-60yiflr p{margin:0;}#mmd-1775822726584-0-60yiflr .label{font-family:inherit;color:#333;}#mmd-1775822726584-0-60yiflr .cluster-label text{fill:#333;}#mmd-1775822726584-0-60yiflr .cluster-label span{color:#333;}#mmd-1775822726584-0-60yiflr .cluster-label span p{background-color:transparent;}#mmd-1775822726584-0-60yiflr .label text,#mmd-1775822726584-0-60yiflr span{fill:#333;color:#333;}#mmd-1775822726584-0-60yiflr .node rect,#mmd-1775822726584-0-60yiflr .node circle,#mmd-1775822726584-0-60yiflr .node ellipse,#mmd-1775822726584-0-60yiflr .node polygon,#mmd-1775822726584-0-60yiflr .node path{fill:#ECECFF;stroke:#9370DB;stroke-width:1px;}#mmd-1775822726584-0-60yiflr .rough-node .label text,#mmd-1775822726584-0-60yiflr .node .label text,#mmd-1775822726584-0-60yiflr .image-shape .label,#mmd-1775822726584-0-60yiflr .icon-shape .label{text-anchor:middle;}#mmd-1775822726584-0-60yiflr .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mmd-1775822726584-0-60yiflr .rough-node .label,#mmd-1775822726584-0-60yiflr .node .label,#mmd-1775822726584-0-60yiflr .image-shape .label,#mmd-1775822726584-0-60yiflr .icon-shape .label{text-align:center;}#mmd-1775822726584-0-60yiflr .node.clickable{cursor:pointer;}#mmd-1775822726584-0-60yiflr .root .anchor path{fill:#333333!important;stroke-width:0;stroke:#333333;}#mmd-1775822726584-0-60yiflr .arrowheadPath{fill:#333333;}#mmd-1775822726584-0-60yiflr .edgePath .path{stroke:#333333;stroke-width:1px;}#mmd-1775822726584-0-60yiflr .flowchart-link{stroke:#333333;fill:none;}#mmd-1775822726584-0-60yiflr .edgeLabel{background-color:rgba(232,232,232, 0.8);text-align:center;}#mmd-1775822726584-0-60yiflr .edgeLabel p{background-color:rgba(232,232,232, 0.8);}#mmd-1775822726584-0-60yiflr .edgeLabel rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mmd-1775822726584-0-60yiflr .labelBkg{background-color:rgba(232, 232, 232, 0.5);}#mmd-1775822726584-0-60yiflr .cluster rect{fill:#ffffde;stroke:#aaaa33;stroke-width:1px;}#mmd-1775822726584-0-60yiflr .cluster text{fill:#333;}#mmd-1775822726584-0-60yiflr .cluster span{color:#333;}#mmd-1775822726584-0-60yiflr div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:inherit;font-size:12px;background:hsl(80, 100%, 96.2745098039%);border:1px solid #aaaa33;border-radius:2px;pointer-events:none;z-index:100;}#mmd-1775822726584-0-60yiflr .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#333;}#mmd-1775822726584-0-60yiflr rect.text{fill:none;stroke-width:0;}#mmd-1775822726584-0-60yiflr .icon-shape,#mmd-1775822726584-0-60yiflr .image-shape{background-color:rgba(232,232,232, 0.8);text-align:center;}#mmd-1775822726584-0-60yiflr .icon-shape p,#mmd-1775822726584-0-60yiflr .image-shape p{background-color:rgba(232,232,232, 0.8);padding:2px;}#mmd-1775822726584-0-60yiflr .icon-shape .label rect,#mmd-1775822726584-0-60yiflr .image-shape .label rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mmd-1775822726584-0-60yiflr .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mmd-1775822726584-0-60yiflr .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mmd-1775822726584-0-60yiflr .node .neo-node{stroke:#9370DB;}#mmd-1775822726584-0-60yiflr [data-look="neo"].node rect,#mmd-1775822726584-0-60yiflr [data-look="neo"].cluster rect,#mmd-1775822726584-0-60yiflr [data-look="neo"].node polygon{stroke:#9370DB;filter:drop-shadow(1px 2px 2px rgba(185, 185, 185, 1));}#mmd-1775822726584-0-60yiflr [data-look="neo"].node path{stroke:#9370DB;stroke-width:1px;}#mmd-1775822726584-0-60yiflr [data-look="neo"].node .outer-path{filter:drop-shadow(1px 2px 2px rgba(185, 185, 185, 1));}#mmd-1775822726584-0-60yiflr [data-look="neo"].node .neo-line path{stroke:#9370DB;filter:none;}#mmd-1775822726584-0-60yiflr [data-look="neo"].node circle{stroke:#9370DB;filter:drop-shadow(1px 2px 2px rgba(185, 185, 185, 1));}#mmd-1775822726584-0-60yiflr [data-look="neo"].node circle .state-start{fill:#000000;}#mmd-1775822726584-0-60yiflr [data-look="neo"].icon-shape .icon{fill:#9370DB;filter:drop-shadow(1px 2px 2px rgba(185, 185, 185, 1));}#mmd-1775822726584-0-60yiflr [data-look="neo"].icon-shape .icon-neo path{stroke:#9370DB;filter:drop-shadow(1px 2px 2px rgba(185, 185, 185, 1));}#mmd-1775822726584-0-60yiflr :root{--mermaid-font-family:inherit;}</style><g><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="mmd-1775822726584-0-60yiflr_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M123.367,35L127.534,35C131.701,35,140.034,35,147.701,35C155.367,35,162.367,35,165.867,35L169.367,35" id="mmd-1775822726584-0-60yiflr-L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTIzLjM2NzE4NzUsInkiOjM1fSx7IngiOjE0OC4zNjcxODc1LCJ5IjozNX0seyJ4IjoxNzMuMzY3MTg3NSwieSI6MzV9XQ==" data-look="classic" marker-end="url(#mmd-1775822726584-0-60yiflr_flowchart-v2-pointEnd)"></path><path d="M288.734,35L292.901,35C297.068,35,305.401,35,313.068,35C320.734,35,327.734,35,331.234,35L334.734,35" id="mmd-1775822726584-0-60yiflr-L_B_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_C_0" data-points="W3sieCI6Mjg4LjczNDM3NSwieSI6MzV9LHsieCI6MzEzLjczNDM3NSwieSI6MzV9LHsieCI6MzM4LjczNDM3NSwieSI6MzV9XQ==" data-look="classic" marker-end="url(#mmd-1775822726584-0-60yiflr_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="mmd-1775822726584-0-60yiflr-flowchart-A-0" data-look="classic" transform="translate(65.68359375, 35)"><rect class="basic label-container" style="" x="-57.68359375" y="-27" width="115.3671875" height="54"></rect><g class="label" style="" transform="translate(-27.68359375, -12)"><rect></rect><foreignObject width="55.3671875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>마크다운</p></span></div></foreignObject></g></g><g class="node default" id="mmd-1775822726584-0-60yiflr-flowchart-B-1" data-look="classic" transform="translate(231.05078125, 35)"><rect class="basic label-container" style="" x="-57.68359375" y="-27" width="115.3671875" height="54"></rect><g class="label" style="" transform="translate(-27.68359375, -12)"><rect></rect><foreignObject width="55.3671875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>미리보기</p></span></div></foreignObject></g></g><g class="node default" id="mmd-1775822726584-0-60yiflr-flowchart-C-3" data-look="classic" transform="translate(418.625, 35)"><rect class="basic label-container" style="" x="-79.890625" y="-27" width="159.78125" height="54"></rect><g class="label" style="" transform="translate(-49.890625, -12)"><rect></rect><foreignObject width="99.78125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>HTML 내보내기</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="mmd-1775822726584-0-60yiflr-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="mmd-1775822726584-0-60yiflr-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs></svg></div>
+<h2 id="표">표</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>3</td>
+<td>긴 문서일수록 미리보기 대기 시간이 조금 늘어납니다</td>
+</tr>
+</tbody></table>
+<h2 id="인용">인용</h2>
+<blockquote>
+<p>HTML 저장 시 Mermaid는 SVG로 굳어져서 오프라인 파일에서도 보입니다.</p>
+</blockquote>
+<hr>
+<p><a href="https://marked.js.org/" target="_blank" rel="noopener noreferrer">Marked</a> · <a href="https://katex.org/" target="_blank" rel="noopener noreferrer">KaTeX</a> · <a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer">Mermaid</a></p>
+</article>
+</div>
+</body>
+</html>
